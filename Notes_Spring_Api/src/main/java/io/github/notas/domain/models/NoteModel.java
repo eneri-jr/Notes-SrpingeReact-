@@ -7,6 +7,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 
 @Document(collection = "nota")
 @Getter
@@ -20,6 +21,7 @@ public class NoteModel {
     private String created_at;
     private String updated_at;
     private String author;
+    private HashMap<String, Integer> listCoAuthor = new HashMap();
     private String coAuthor;
     private String compart;
 
