@@ -3,6 +3,7 @@ package io.github.notas.rest.controller;
 import io.github.notas.domain.models.NoteModel;
 import io.github.notas.domain.models.UserModel;
 import io.github.notas.domain.repository.UserRepository;
+import io.github.notas.rest.dto.CompartDTO;
 import io.github.notas.security.jwt.JwtService;
 import io.github.notas.service.impl.NoteServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -79,6 +80,18 @@ public class NoteController {
     public void updateNote(@PathVariable String id, @RequestBody NoteModel note, @RequestHeader("x-acess-token") String token) throws IllegalAccessException {
         if(jwtService.tokenValid(token)){
             noteService.updateNote(id,note);
+        }
+        else{
+            throw new IllegalAccessException();
+        }
+    }
+
+    //Compartilhar uma nota:
+    @PutMapping
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void compartilhaNote(@RequestBody CompartDTO dados, @RequestHeader("x-acess-token") String token) throws IllegalAccessException {
+        if(jwtService.tokenValid(token)){
+            noteService.compartNote(dados);
         }
         else{
             throw new IllegalAccessException();

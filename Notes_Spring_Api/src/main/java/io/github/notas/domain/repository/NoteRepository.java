@@ -11,6 +11,6 @@ import java.util.List;
 public interface NoteRepository extends MongoRepository<NoteModel, String> {
 
     List<NoteModel> findByAuthor(String id);
-    List<NoteModel> findByCoAuthor(String id);
     List<NoteModel> findByBodyRegex(String query);
+    List<NoteModel> findByListCoAuthor(String id);
 }

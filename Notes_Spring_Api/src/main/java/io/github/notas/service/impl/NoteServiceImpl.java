@@ -3,8 +3,11 @@ package io.github.notas.service.impl;
 import io.github.notas.domain.models.NoteModel;
 import io.github.notas.domain.models.UserModel;
 import io.github.notas.domain.repository.NoteRepository;
+import io.github.notas.domain.repository.UserRepository;
+import io.github.notas.rest.dto.CompartDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
@@ -20,6 +23,9 @@ public class NoteServiceImpl {
     @Autowired
     private NoteRepository repositoryNote;
 
+    @Autowired
+    private UserRepository repositoryUser;
+
     //Método para salvar a nota:
     @Transactional
     public NoteModel save(NoteModel noteModel, UserModel user){
@@ -32,7 +38,11 @@ public class NoteServiceImpl {
     public List<NoteModel> find(UserModel user){
         String id = user.getId();
         List<NoteModel> list = repositoryNote.findByAuthor(id);
-        list.addAll(repositoryNote.findByCoAuthor(id));
+//        List<NoteModel> listTotal = repositoryNote.findAll();
+//        for (NoteModel n: listTotal) {
+//
+//        }
+        list.addAll(repositoryNote.findByListCoAuthor(id));
         return list;
     }
 
@@ -68,10 +78,22 @@ public class NoteServiceImpl {
                     note.setUpdated_at(LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyy")));
                     note.setCreated_at(notaExistente.getCreated_at());
                     note.setAuthor(notaExistente.getAuthor());
-                    note.setCoAuthor(notaExistente.getCoAuthor());
+                    note.setListCoAuthor(notaExistente.getListCoAuthor());
                     note.setCompart(notaExistente.getCompart());
                     repositoryNote.save(note);
                     return note;
                 }).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Nota não encontrada"));
+    }
+
+    //Método para compartilhar uma nota:
+    public void compartNote(CompartDTO dados){
+        NoteModel note = dados.getNote();
+        UserModel user = repositoryUser.findByEmail(dados.getEmail()).
+                orElseThrow(() -> new UsernameNotFoundException("Usuário inexistente"));
+        note.setCompart("Sim");
+        ArrayList newList = note.getListCoAuthor();
+        newList.add(user.getId());
+        note.setListCoAuthor(newList);
+        repositoryNote.save(note);
     }
 }
