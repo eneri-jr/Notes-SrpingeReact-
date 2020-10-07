@@ -1,4 +1,4 @@
-import React, { Fragment, useState} from 'react';
+import React, { Fragment, useState } from 'react';
 import { Button, Column, Tag, Title, List, Input, Label } from "rbx";
 import Moment from 'moment';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -13,32 +13,45 @@ function ListNotes(props) {
           <Title size={6}>
             {props.notes.length} Notes
           </Title>
-          </Column>
-          <Column size={2}>
-            <Button state="active" color="custom-purple" outlined size="small" onClick={() => props.createNote()}>
-              Notes +
+        </Column>
+        <Column size={2}>
+          <Button state="active" color="custom-purple" outlined size="small" onClick={() => props.createNote()}>
+            Notes +
             </Button>
-          </Column>
+        </Column>
       </Column.Group>
       <List className="notes-list">
         {props.notes.map((item, key) =>
           <List.Item key={key} onClick={() => props.selectNote(item.id)} active={item == props.current_note}>
             <Title size={5}>
-              {item.title.replace(/(<([^>]+)>)/ig, "").substring(0,15)}
+              {item.title.replace(/(<([^>]+)>)/ig, "").substring(0, 15)}
             </Title>
             <Title size={6} subtitle spaced={false}>
-              {item.body.replace(/(<([^>]+)>)/ig, "").substring(0,30)}
+              {item.body.replace(/(<([^>]+)>)/ig, "").substring(0, 30)}
             </Title>
 
             <Column.Group breakpoint="mobile">
               <Column size={9}>
-              <p>Criada em: {item.created_at}</p>
-              <p>Atualizada em: {item.updated_at}</p>
-              <hr/>
+                <p>Criada em: {item.created_at}</p>
+                <p>Atualizada em: {item.updated_at}</p>
+                <hr />
+                <form>
+                  <Label className="has-text-grey">Compartilhar nota com: </Label>
+                  <Input
+                    type="email"
+                    onChange={e => setEmail(e.target.value)}
+                    required
+                    name="email" />
+                  <FontAwesomeIcon
+                    icon={faShare}
+                    onClick={() => props.compNote(item, email)}
+                    color="grey"
+                  />
+                </form>
               </Column>
               <Column size={2}>
-                <FontAwesomeIcon 
-                  icon={faTrash} 
+                <FontAwesomeIcon
+                  icon={faTrash}
                   onClick={() => props.deleteNote(item)}
                   color="grey"
                 />

@@ -56,6 +56,13 @@ function Notes(props) {
     }
   }
 
+  const compNote = async(note, email) => {
+    console.log(note);
+    console.log(email);
+    NoteService.compart(note, email);
+    fetchNotes();
+  }
+
   return (
     <Fragment>
       <Column.Group className="notes" id="notes">
@@ -78,6 +85,7 @@ function Notes(props) {
             selectNote={selectNote}
             deleteNote={deleteNote}
             createNote={createNote}
+            compNote={compNote}
             current_note={current_note} />
         </Menu>
 

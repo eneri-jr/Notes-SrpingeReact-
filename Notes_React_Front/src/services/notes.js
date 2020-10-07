@@ -21,7 +21,11 @@ const NotesService = {
 
   search: (query) => Api.get(`/notes/${query}`, {
     headers: {'x-acess-token': localStorage.getItem('token')}
-  })
+  }),
+
+  compart: (note, email) => Api.put('/notes/', {note,email}, {
+    headers: {'x-acess-token': localStorage.getItem('token')}
+  }),
 }
 
 export default NotesService;
